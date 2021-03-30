@@ -22,7 +22,6 @@ namespace Business.Concrete
         {
             _carImageDal = carImageDal;
         }
-        [ValidationAspect(typeof(CarImageValidator))]
         public IResult Add(IFormFile file, CarImage carImage)
         {
             IResult result = BusinessRules.Run(CheckImageLimitExceeded(carImage.CarId));
@@ -88,7 +87,7 @@ namespace Business.Concrete
         {
             try
             {
-                string path = @"\wwwroot\img\logo.jpg";
+                string path = @"\logo.jpg";
                 var result = _carImageDal.GetAll(c => c.CarId == id).Any();
                 if (!result)
                 {

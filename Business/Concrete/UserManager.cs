@@ -1,5 +1,8 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Validation;
 using Core.Entities.Concrete;
 using Core.Utilities;
 using Core.Utilities.Results;
@@ -54,7 +57,31 @@ namespace Business.Concrete
 
         public IDataResult<User> GetByMail(string email)
         {
-            return new SuccessDataResult<User>(_userDal.Get(u => u.Email == email));
+            User user = _userDal.Get(u => u.Email.ToLower() == email.ToLower());
+
+            if (user == null)
+            {
+                return new ErrorDataResult<User>(Messages.MessageNotListed);
+            }
+            else
+            {
+                return new SuccessDataResult<User>(user, Messages.MessageListed);
+            }
+        }
+        //[SecuredOperation("admin,user.updateinfos")]
+        [ValidationAspect(typeof(UserValidator))]
+        [CacheRemoveAspect("IUserService.Get")]
+        public IResult UpdateSpecificInfos(User user)
+        {
+            User userInfos = GetById(user.Id).Data;
+
+            userInfos.FirstName = user.FirstName;
+            userInfos.LastName = user.LastName;
+            userInfos.Email = user.Email;
+
+            _userDal.Update(userInfos);
+
+            return new SuccessResult(Messages.UserUpdated);
         }
     }
 }

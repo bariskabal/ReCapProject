@@ -1,4 +1,5 @@
-﻿using Core.Utilities.Results;
+﻿using Core.Entities.Concrete;
+using Core.Utilities.Results;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -20,8 +21,8 @@ namespace Core.Utilities.Helpers
                 }
             }
             var result = NewPath(file);
-            File.Move(sourcePath, result);
-            return result;
+            File.Move(sourcePath, result.result);
+            return result.Path;
         }
         public static IResult Delete(string path)
         {
@@ -49,7 +50,7 @@ namespace Core.Utilities.Helpers
             File.Delete(sourcePath);
             return result;
         }
-        public static string NewPath(IFormFile file)
+        public static Files NewPath(IFormFile file)
         {
             FileInfo fi = new FileInfo(file.FileName);
             string fileExtension = fi.Extension;
@@ -58,7 +59,8 @@ namespace Core.Utilities.Helpers
             var newPath = Guid.NewGuid().ToString() + fileExtension;
 
             string result = $@"{path}\{newPath}";
-            return result;
+             
+            return new Files { result = result, Path = newPath };
         }
     }
 }

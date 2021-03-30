@@ -23,7 +23,7 @@ namespace Business.Concrete
         {
             _carDal = carDal;
         }
-        [SecuredOperation("car.add,admin")]
+        //[SecuredOperation("car.add,admin")]
         [ValidationAspect(typeof(CarValidator))]
         [CacheRemoveAspect("ICarService.Get")]
         public IResult Add(Car car)
@@ -55,16 +55,16 @@ namespace Business.Concrete
             return new SuccessDataResult<List<CarDetailDto>>(data, Message.CarsDetailsListed);
         }
 
-        public IDataResult<List<Car>> GetCarsByBrandId(int id)
+        public IDataResult<List<CarDetailDto>> GetCarsByBrandId(int id)
         {
-            var data = _carDal.GetAll(c => c.BrandId == id);
-            return new SuccessDataResult<List<Car>>(data, Message.CarsListed);
+            var data = _carDal.GetCarsByBrandId(id);
+            return new SuccessDataResult<List<CarDetailDto>>(data, Message.CarsListed);
         }
 
-        public IDataResult<List<Car>> GetCarsByColorId(int id)
+        public IDataResult<List<CarDetailDto>> GetCarsByColorId(int id)
         {
-            var data = _carDal.GetAll(c => c.ColorId == id);
-            return new SuccessDataResult<List<Car>>(data, Message.CarsListed);
+            var data = _carDal.GetCarsByColorId(id);
+            return new SuccessDataResult<List<CarDetailDto>>(data, Message.CarsListed);
         }
         [CacheAspect]
         [PerformanceAspect(5)]
@@ -72,6 +72,18 @@ namespace Business.Concrete
         {
             var data = _carDal.Get(c => c.Id == id);
             return new SuccessDataResult<Car>(data, Message.CarsListed);
+        }
+
+        public IDataResult<List<CarDetailDto>> GetCarDetailsById(int id)
+        {
+            var data = _carDal.GetCarDetailsById(id);
+            return new SuccessDataResult<List<CarDetailDto>>(data, Message.CarsListed);
+        }
+        [CacheAspect]
+        public IDataResult<List<CarDetailDto>> GetCarDetailsFilter(int brandId, int colorId)
+        {
+            var data = _carDal.GetCarDetails(brandId, colorId);
+            return new SuccessDataResult<List<CarDetailDto>>(data,Message.CarsListed);
         }
     }
 }

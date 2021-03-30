@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Entities.Concrete;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -58,5 +59,12 @@ namespace Business.Constants
         public static string ColorsListed { get; internal set; }
         public static string RentalsListed { get; internal set; }
         public static string UsersListed { get; internal set; }
+        public static User MessageNotListed { get; internal set; }
+        public static string MessageListed { get; internal set; }
+        public static string CardUpdated { get; internal set; }
+        public static string CardIsExists { get; internal set; }
+        public static string PaymentAdded { get; internal set; }
+        public static string CardAdded { get; internal set; }
+        public static string CardDeleted { get; internal set; }
     }
 }

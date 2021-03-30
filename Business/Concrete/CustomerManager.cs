@@ -1,5 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Performance;
 using Core.Utilities;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -51,6 +53,16 @@ namespace Business.Concrete
         public IResult Update(Customer customer)
         {
             return new SuccessResult(Message.CustomerUpdated);
+        }
+        public IDataResult<List<CustomerDetailDto>> GetCustomerDetailById(int customerId)
+        {
+            return new SuccessDataResult<List<CustomerDetailDto>>(_customerDal.GetCustomerDetails(c => c.Id == customerId), Messages.CustomerListed);
+        }
+        [CacheAspect]
+        [PerformanceAspect(5)]
+        public IDataResult<UserCustomerDto> GetByEmail(string email)
+        {
+            return new SuccessDataResult<UserCustomerDto>(_customerDal.GetCustomerIdOfUser(email));
         }
     }
 }
